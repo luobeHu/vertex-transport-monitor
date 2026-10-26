@@ -127,6 +127,30 @@ body .compact-workspace .telemetry { background:linear-gradient(150deg,#fffffc,#
 .toast { background:#ebf0ec; color:#486525; border-color:#d3dacd; box-shadow:0 10px 40px #19302414; }
 .skip-link { background:#55752d; color:#eff3ed; }
 .compact-workspace .twin-panel.expanded { grid-template-columns:190px minmax(0,1fr) 330px; }
+.compact-floor .floor-caption { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.compact-floor .door-state { font-size:10px; color:#527244; border-left:1px solid #cbd7be; padding-left:9px; white-space:nowrap; letter-spacing:0; }
+.compact-state-grid [data-live-state] .tag { padding:1px 0; background:transparent; }
+.simulation-badge { display:inline-flex; align-items:center; margin-left:8px; padding:3px 6px; border:1px solid #c7d6b6; background:#edf4e5; color:#49653b; border-radius:4px; font-size:9px; letter-spacing:0; }
+.simulation-controls { position:absolute; z-index:2; bottom:47px; left:22px; display:flex; align-items:center; gap:0; background:#fbfdf8eb; border:1px solid #cedbc3; border-radius:6px; box-shadow:0 4px 14px #203b2009; padding:4px; backdrop-filter:blur(10px); }
+.simulation-controls>span { padding:0 9px; font-size:10px; color:#5a734c; min-width:126px; white-space:nowrap; }
+.simulation-controls>button { display:inline-flex; align-items:center; justify-content:center; gap:5px; border-radius:4px; padding:7px 8px; color:#48653b; font-size:10px; min-height:28px; }
+.simulation-controls>button:hover { background:#e8f0df; }
+.simulation-controls>button>svg { width:13px; height:13px; }
+.demo-journey { cursor:default; }
+.demo-journey:hover { background:linear-gradient(120deg,#e9eee766,#edf1ea66); border-color:#d6dfc9; }
+.demo-journey strong>span { font-size:23px; }
+.demo-journey .active-task-bottom { line-height:1.6; }
+@media(max-width:1100px) {
+  .simulation-controls { left:15px; }
+  .simulation-controls>span { font-size:9px; padding:0 6px; min-width:115px; }
+  .is-simulating .view-toolbar { bottom:87px; }
+}
+@media(max-width:560px) {
+  .simulation-controls { left:17px; right:17px; justify-content:space-between; }
+  .simulation-controls>span { flex:1; font-size:10px; }
+  .simulation-controls>button { padding:8px 10px; }
+  .simulation-badge { font-size:8px; }
+}
 .details-dialog,.records-dialog { background:linear-gradient(145deg,#fffffc,#f7f9f2); color:#3d4d30; border-color:#dbdfd9; box-shadow:0 30px 140px #19302430,0 1px 0 #fff inset; }
 .details-dialog::backdrop,.records-dialog::backdrop { background:#25332640; backdrop-filter:blur(8px); }
 .dialog-heading { padding-bottom:23px; }

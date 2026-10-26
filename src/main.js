@@ -9,6 +9,7 @@ import { renderShell } from './shell.js';
 import { createIcons, Activity, ArrowDown, ArrowUpRight, ArrowDownToLine, ArrowLeft, ArrowRight, ArrowUp, ArrowUpDown, Bell, Blocks, Boxes, Building2, Check, CheckCheck, ChevronDown, ChevronLeft, ChevronRight, Circle, CircleCheck, CircleHelp, CirclePause, Clock3, Code2, Container, Copy, Cpu, Expand, ExternalLink, FileText, Filter, Gauge, Layers3, LayoutDashboard, ListFilter, ListOrdered, Maximize2, Minus, MoreHorizontal, MoveUpRight, MousePointer2, PanelsTopLeft, Package, PanelLeftClose, Play, Plus, Radio, RefreshCw, RotateCcw, Search, Settings2, ShieldCheck, SlidersHorizontal, TriangleAlert, Wifi, WifiOff, X, Zap } from 'lucide';
 import { devices, tasks, TYPES, STATE, TASK_STATE, SNAPSHOT, getTasks } from './data.js';
 import { createTwin } from './twin.js';
+import { DEMO_DEVICE_ID, sampleElevatorDemo } from './simulation.js';
 
 const iconSet = { Activity, ArrowDown, ArrowUpRight, ArrowDownToLine, ArrowLeft, ArrowRight, ArrowUp, ArrowUpDown, Bell, Blocks, Boxes, Building2, Check, CheckCheck, ChevronDown, ChevronLeft, ChevronRight, Circle, CircleCheck, CircleHelp, CirclePause, Clock3, Code2, Container, Copy, Cpu, Expand, ExternalLink, FileText, Filter, Gauge, Layers3, LayoutDashboard, ListFilter, ListOrdered, Maximize2, Minus, MoreHorizontal, MoveUpRight, MousePointer2, PanelsTopLeft, Package, PanelLeftClose, Play, Plus, Radio, RefreshCw, RotateCcw, Search, Settings2, ShieldCheck, SlidersHorizontal, TriangleAlert, Wifi, WifiOff, X, Zap };
 const $ = s => document.querySelector(s);
@@ -30,7 +31,11 @@ $('#app').innerHTML = renderShell(TYPES, icon);
 $('#records-content').innerHTML = `    <section class="panel tasks-panel" id="commands" aria-labelledby="commands-title"><div class="task-header"><div><h2 id="commands-title">任务指令 <span class="tag tag-neutral" id="task-device"></span></h2><span class="section-description">设备与任务联动，追踪完整执行过程</span></div><button class="button" id="export">${icon('arrow-down-to-line')}导出记录</button></div><div class="task-toolbar"><div class="status-tabs" role="tablist" aria-label="任务完成状态"><button data-status="pending" role="tab">未完成 <span id="pending-count"></span></button><button data-status="completed" role="tab">已完成 <span id="completed-count"></span></button></div><div class="task-filters"><label class="select-shell slim floor-select">${icon('layers-3')}<select id="floor-select" aria-label="按楼层筛选"><option value="all">全部楼层</option></select>${icon('chevron-down')}</label><button id="floor-filter" class="floor-filter" hidden></button><div class="task-search">${icon('search')}<input id="task-search" placeholder="搜索指令编号" aria-label="搜索指令编号"></div><label class="select-shell slim">${icon('sliders-horizontal')}<select id="priority-filter" aria-label="按优先级筛选"><option value="all">全部优先级</option><option value="high">高优先级</option><option value="normal">普通优先级</option></select>${icon('chevron-down')}</label></div></div><div class="table-wrap"><table><thead><tr><th>指令编号</th><th>任务类型</th><th>运输路径</th><th>执行状态</th><th>优先级</th><th><button class="sort-button" id="sort-time">下发时间 ${icon('arrow-down')}</button></th><th>任务耗时</th><th class="align-right">操作</th></tr></thead><tbody id="task-rows"></tbody></table></div><div class="table-footer"><span id="table-range"></span><div class="pagination"><span>6 条 / 页</span><button class="icon-button" id="previous-page" aria-label="上一页">${icon('chevron-left')}</button><span class="page-number" id="page-number">1</span><button class="icon-button" id="next-page" aria-label="下一页">${icon('chevron-right')}</button></div></div></section>`;
 // Icons are selected explicitly to keep the static bundle small.
 const icons = () => createIcons({ icons: iconSet, attrs: { 'stroke-width': 1.7, 'aria-hidden': 'true' } });
-const current = () => devices.find(d => d.id === state.device);
+let simulationState = sampleElevatorDemo(0, matchMedia('(prefers-reduced-motion: reduce)').matches);
+const current = () => {
+  const d = devices.find(d => d.id === state.device);
+  return d?.id === DEMO_DEVICE_ID ? { ...d, ...simulationState } : d;
+};
 const scopeDevices = () => devices.filter(d => d.type === state.type && (state.building === 'all' || d.building === state.building));
 const visibleDevices = () => scopeDevices().filter(d => (state.deviceState === 'all' || d.state === state.deviceState) && `${d.id} ${d.name} ${d.location}`.toLowerCase().includes(state.query.toLowerCase()));
 const chip = (label, tone, dot = true) => `<span class="tag tag-${tone}">${dot ? '<span class="tag-dot"></span>' : ''}${label}</span>`;
@@ -41,7 +46,7 @@ function syncUrl() {
   history.replaceState(null, '', `${location.pathname}?${p}${location.hash}`);
   window.dispatchEvent(new CustomEvent('transport:selection', { detail: { type: state.type, device: state.device, status: state.status } }));
 }
-const compactView = createCompactView({ $, state, tasks, TYPES, STATE, TASK_STATE, SNAPSHOT, getTasks, icon, chip, scopeDevices, visibleDevices, current, showDialog });
+const compactView = createCompactView({ $, state, tasks, TYPES, STATE, TASK_STATE, SNAPSHOT, getTasks, icon, chip, scopeDevices, visibleDevices, current, showDialog, icons, getDemoState: () => simulationState });
 function renderMetrics() { compactView.renderMetrics(); }
 function renderDevices() { compactView.renderDevices(); }
 function renderTelemetry() { compactView.renderTelemetry(); }
@@ -67,7 +72,10 @@ function renderTasks() {
   $('#sort-time').innerHTML = `下发时间 ${icon(state.descending ? 'arrow-down' : 'arrow-up')}`;
   $('#sort-time').closest('th').setAttribute('aria-sort', state.descending ? 'descending' : 'ascending');
 }
-const twin = createTwin($('#twin-canvas'), floor => { if (!current()) return; state.floor = floor; state.page = 1; renderTasks(); icons(); openRecords(); });
+const twin = createTwin($('#twin-canvas'), floor => { if (!current()) return; state.floor = floor; state.page = 1; renderTasks(); icons(); openRecords(); }, live => {
+  simulationState = live;
+  compactView.updateSimulation(live);
+});
 function render({ model = true } = {}) {
   document.querySelectorAll('[data-type]').forEach(el => { el.classList.toggle('active', el.dataset.type === state.type); el.setAttribute('aria-selected', String(el.dataset.type === state.type)); });
   renderMetrics(); renderDevices(); renderTelemetry(); renderTasks(); icons();
@@ -110,6 +118,8 @@ $('#previous-page').addEventListener('click', () => { state.page--; renderTasks(
 $('#next-page').addEventListener('click', () => { state.page++; renderTasks(); icons(); });
 $('#refresh').addEventListener('click', () => { $('#refresh').classList.add('refreshing'); render(); setTimeout(() => $('#refresh').classList.remove('refreshing'), 600); toast('已重新读取演示数据 · 数据快照 2026-10-26 14:32:08'); });
 $('#zoom-in').addEventListener('click', () => twin.zoom(1)); $('#zoom-out').addEventListener('click', () => twin.zoom(-1)); $('#reset-view').addEventListener('click', () => twin.reset()); $('#front-view').addEventListener('click', () => twin.front());
+$('#toggle-demo').addEventListener('click', () => twin.toggleDemo());
+$('#restart-demo').addEventListener('click', () => twin.restartDemo());
 $('#expand-twin').addEventListener('click', () => { const expanded = $('.twin-panel').classList.toggle('expanded'); $('#expand-twin').setAttribute('aria-label', expanded ? '退出放大视图' : '放大三维视图'); });
 document.querySelectorAll('[role="tablist"]').forEach(list => list.addEventListener('keydown', e => {
   if (!['ArrowLeft','ArrowRight','Home','End'].includes(e.key)) return;
@@ -154,12 +164,12 @@ function showCommand(id) {
 }
 function showHelp(agent = false) {
   const base = `${location.origin}${location.pathname}`;
-  showDialog(`<div class="dialog-heading"><div><span class="small-eyebrow">${agent ? 'AGENT INTEGRATION' : 'WORKSPACE GUIDE'}</span><h2 id="dialog-title">${agent ? '为你的 Agent 准备就绪' : '垂直运输监控工作台'}</h2></div><button class="icon-button" data-close aria-label="关闭说明">${icon('x')}</button></div><p class="help-intro">${agent ? '使用 URL 直接定位设备和任务；通过页面公开接口读取静态数据、切换设备，或将页面嵌入你的服务。' : '从设备总览到单条指令，一次选择即可联动查询。所有数据为固定演示快照，页面不会向真实设备下发控制指令。'}</p>${agent ? `<div class="help-section"><h3>嵌入服务</h3><code class="code-block">&lt;iframe src="${esc(base)}?embed=1&amp;type=elevator&amp;device=EL-01" title="垂直运输监控"&gt;&lt;/iframe&gt;</code></div><div class="help-section"><h3>URL 定位参数</h3><div class="param-row"><code>type</code><span>elevator / hoist / lans</span></div><div class="param-row"><code>device</code><span>EL-01 / HT-01 / LS-01 等设备编号</span></div><div class="param-row"><code>status</code><span>pending / completed</span></div><div class="param-row"><code>command</code><span>指令编号，打开对应明细</span></div><div class="param-row"><code>embed=1</code><span>隐藏外层导航，适应嵌入容器</span></div></div><div class="help-section"><h3>页面内 JavaScript API</h3><code class="code-block">window.TransportMonitor.getSnapshot()<br>window.TransportMonitor.selectDevice('LS-01')<br>window.TransportMonitor.setStatus('completed')<br>window.TransportMonitor.openCommand('CMD-20261026-0001')</code><p class="help-note">跨域 iframe 使用 postMessage；事件契约见仓库 README。当前接口仅读取和浏览演示数据。</p></div>` : `<div class="guide-step"><span>01</span><div><h3>选择设备类型与建筑</h3><p>切换三类设备，点击设备卡片查看状态；点击“设备在线”查看汇总统计。</p></div></div><div class="guide-step"><span>02</span><div><h3>点击设备，联动数字孪生</h3><p>拖动旋转模型，点击楼层筛选相关指令。右侧保留楼层、状态、模式和告警，点击状态查看完整参数。</p></div></div><div class="guide-step"><span>03</span><div><h3>追踪每一条任务</h3><p>点击未完成 / 已完成打开任务记录弹窗，再筛选、查看进度或导出 CSV。</p></div></div><div class="help-tip">${icon('code-2')}点击右上角接入图标，查看 Agent 和 iframe 接入方式。</div>`}<div class="dialog-footer"><span>VERTEX / 静态演示 v1.1</span><button class="button primary" data-close>知道了</button></div>`, true);
+  showDialog(`<div class="dialog-heading"><div><span class="small-eyebrow">${agent ? 'AGENT INTEGRATION' : 'WORKSPACE GUIDE'}</span><h2 id="dialog-title">${agent ? '为你的 Agent 准备就绪' : '垂直运输监控工作台'}</h2></div><button class="icon-button" data-close aria-label="关闭说明">${icon('x')}</button></div><p class="help-intro">${agent ? '使用 URL 直接定位设备和任务；通过页面公开接口读取静态数据、切换设备，或将页面嵌入你的服务。' : '从设备总览到单条指令，一次选择即可联动查询。EL-01 提供循环运行与开关门演示，其余设备和任务记录为固定快照；页面不连接真实设备。'}</p>${agent ? `<div class="help-section"><h3>嵌入服务</h3><code class="code-block">&lt;iframe src="${esc(base)}?embed=1&amp;type=elevator&amp;device=EL-01" title="垂直运输监控"&gt;&lt;/iframe&gt;</code></div><div class="help-section"><h3>URL 定位参数</h3><div class="param-row"><code>type</code><span>elevator / hoist / lans</span></div><div class="param-row"><code>device</code><span>EL-01 / HT-01 / LS-01 等设备编号</span></div><div class="param-row"><code>status</code><span>pending / completed</span></div><div class="param-row"><code>command</code><span>指令编号，打开对应明细</span></div><div class="param-row"><code>embed=1</code><span>隐藏外层导航，适应嵌入容器</span></div></div><div class="help-section"><h3>页面内 JavaScript API</h3><code class="code-block">window.TransportMonitor.getSnapshot()<br>window.TransportMonitor.selectDevice('LS-01')<br>window.TransportMonitor.setStatus('completed')<br>window.TransportMonitor.openCommand('CMD-20261026-0001')</code><p class="help-note">跨域 iframe 使用 postMessage；事件契约见仓库 README。当前接口仅读取和浏览演示数据。</p></div>` : `<div class="guide-step"><span>01</span><div><h3>选择设备类型与建筑</h3><p>切换三类设备，点击设备卡片查看状态；点击“设备在线”查看汇总统计。</p></div></div><div class="guide-step"><span>02</span><div><h3>点击设备，联动数字孪生</h3><p>拖动旋转模型，点击楼层筛选相关指令。右侧保留楼层、状态、模式和告警，点击状态查看完整参数。</p></div></div><div class="guide-step"><span>03</span><div><h3>追踪每一条任务</h3><p>点击未完成 / 已完成打开任务记录弹窗，再筛选、查看进度或导出 CSV。</p></div></div><div class="help-tip">${icon('code-2')}点击右上角接入图标，查看 Agent 和 iframe 接入方式。</div>`}<div class="dialog-footer"><span>VERTEX / 模拟演示 v1.3</span><button class="button primary" data-close>知道了</button></div>`, true);
 }
 $('#agent-help').addEventListener('click', () => showHelp(true)); $('#help-button').addEventListener('click', () => showHelp());
 const api = {
-  version: '1.1.0',
-  getSnapshot: () => ({ demo: true, snapshotAt: SNAPSHOT, selection: { type: state.type, device: state.device, status: state.status }, devices: devices.map(d => ({ ...d })), tasks: tasks.map(t => ({ ...t })) }),
+  version: '1.3.0',
+  getSnapshot: () => ({ demo: true, snapshotAt: SNAPSHOT, selection: { type: state.type, device: state.device, status: state.status }, devices: devices.map(d => ({ ...d })), tasks: tasks.map(t => ({ ...t })), simulation: twin.getDemoState() }),
   selectDevice,
   setStatus(status) { if (!['pending', 'completed'].includes(status)) throw new Error('status 必须为 pending 或 completed'); state.status = status; state.page = 1; render({ model: false }); return { status }; },
   openCommand(id) { const t = tasks.find(t => t.id === id); if (!t) throw new Error('指令不存在'); selectDevice(t.deviceId); api.setStatus(t.status === 'completed' ? 'completed' : 'pending'); return showCommand(id); },
