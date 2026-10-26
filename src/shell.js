@@ -2,17 +2,18 @@ export function renderShell(TYPES, icon) {
   return `
   <a class="skip-link" href="#main">跳至监控内容</a>
   <header class="compact-header">
-    <a class="compact-brand" href="?" aria-label="VERTEX 首页"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M6 7h7l5 12 5-12h5L18 28h-4L6 7Z" fill="currentColor"/><path d="m4 7 9 21h-3L1 7h3Z" fill="currentColor" opacity=".4"/></svg>VERTEX</a>
+    <a class="compact-brand" href="?" aria-label="VERTEX 首页"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M6 7h7l5 12 5-12h5L18 28h-4L6 7Z" fill="currentColor"/><path d="m4 7 9 21h-3L1 7h3Z" fill="currentColor" opacity=".4"/></svg><span>VERTEX<small>VERTICAL SYSTEMS</small></span></a>
     <div><span class="demo-pill"><span></span>静态演示</span><button class="icon-button" id="agent-help" title="Agent 接入说明" aria-label="Agent 接入说明">${icon('code-2')}</button><button class="icon-button" id="help-button" title="使用说明" aria-label="使用说明">${icon('circle-help')}</button></div>
   </header>
   <main id="main" class="compact-main">
-    <div class="compact-titlebar"><div><h1>垂直运输监控</h1><p>设备状态，一目了然。</p></div><button class="button" id="refresh">${icon('refresh-cw')}<span>刷新</span></button></div>
+    <div class="compact-titlebar"><div><div class="premium-eyebrow"><span></span>OPERATIONS / VERTICAL TRANSPORT</div><h1>垂直运输监控</h1><p>设备全景与任务追踪</p></div><button class="button" id="refresh">${icon('refresh-cw')}<span>刷新</span></button></div>
     <div class="compact-typebar"><div class="type-tabs" role="tablist" aria-label="设备类型">${TYPES.map(t => `<button role="tab" data-type="${t.id}">${t.name}</button>`).join('')}</div><button class="overview-button" id="overview-button" aria-label="查看设备汇总统计"><span id="overview-summary"></span>${icon('chevron-right')}</button></div>
-    <section class="compact-device-section" aria-labelledby="devices-title"><div class="compact-section-heading"><h2 id="devices-title">选择设备 <span class="count" id="device-count"></span></h2><button class="text-button" id="open-filters">${icon('sliders-horizontal')}<span id="filter-label">筛选</span></button></div><div id="devices-list" class="compact-device-list"></div></section>
+
     <div class="compact-workspace" id="workspace">
       <section class="panel twin-panel" aria-label="设备数字孪生与状态">
+    <section class="compact-device-section equipment-rail" aria-labelledby="devices-title"><div class="compact-section-heading"><h2 id="devices-title">选择设备 <span class="count" id="device-count"></span></h2><button class="text-button" id="open-filters" aria-label="筛选设备" title="筛选设备">${icon('sliders-horizontal')}<span id="filter-label">筛选</span></button></div><div id="devices-list" class="compact-device-list"></div></section>
         <div class="twin-main">
-          <div class="twin-heading"><span class="small-eyebrow">3D 设备视图</span><button class="icon-button" id="expand-twin" aria-label="放大三维视图" title="放大三维视图">${icon('maximize-2')}</button></div>
+          <div class="twin-heading"><span class="small-eyebrow">数字孪生视图</span><button class="icon-button" id="expand-twin" aria-label="放大三维视图" title="放大三维视图">${icon('maximize-2')}</button></div>
           <div class="scene-label" id="scene-label"></div><div id="twin-canvas" class="twin-canvas"></div><div class="scene-empty" hidden>暂无符合条件的设备</div><div class="scene-floor-note" id="floor-note"></div>
           <div class="view-toolbar"><button class="icon-button" id="zoom-in" title="放大" aria-label="放大模型">${icon('plus')}</button><button class="icon-button" id="zoom-out" title="缩小" aria-label="缩小模型">${icon('minus')}</button><span></span><button class="icon-button" id="reset-view" title="重置视角" aria-label="重置视角">${icon('rotate-ccw')}</button><button class="icon-button" id="front-view" title="正面视角" aria-label="正面视角">${icon('panels-top-left')}</button></div>
           <div class="scene-bottom"><span>拖动旋转 · 点击楼层查看任务</span><span>示意模型</span></div>

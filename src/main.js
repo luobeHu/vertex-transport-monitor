@@ -3,6 +3,7 @@ import '@fontsource/ibm-plex-mono/latin-400.css';
 import '@fontsource/ibm-plex-mono/latin-500.css';
 import './style.css';
 import './compact.css';
+import './premium.css';
 import { createCompactView } from './compact-view.js';
 import { renderShell } from './shell.js';
 import { createIcons, Activity, ArrowDown, ArrowUpRight, ArrowDownToLine, ArrowLeft, ArrowRight, ArrowUp, ArrowUpDown, Bell, Blocks, Boxes, Building2, Check, CheckCheck, ChevronDown, ChevronLeft, ChevronRight, Circle, CircleCheck, CircleHelp, CirclePause, Clock3, Code2, Container, Copy, Cpu, Expand, ExternalLink, FileText, Filter, Gauge, Layers3, LayoutDashboard, ListFilter, ListOrdered, Maximize2, Minus, MoreHorizontal, MoveUpRight, MousePointer2, PanelsTopLeft, Package, PanelLeftClose, Play, Plus, Radio, RefreshCw, RotateCcw, Search, Settings2, ShieldCheck, SlidersHorizontal, TriangleAlert, Wifi, WifiOff, X, Zap } from 'lucide';

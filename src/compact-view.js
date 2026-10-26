@@ -13,7 +13,7 @@ export function createCompactView(ctx) {
     $('#device-count').textContent = list.length;
     $('#devices-list').innerHTML = list.length ? list.map(d => {
       const status = STATE[d.state];
-      return `<button class="compact-device ${d.id === state.device ? 'selected' : ''}" data-device="${d.id}" aria-pressed="${d.id === state.device}"><span class="compact-device-title">${d.name}${chip(status.label, status.tone)}</span><span class="compact-device-meta">${d.id} · ${d.building}<span>${String(d.floor).padStart(2, '0')} F</span></span></button>`;
+      return `<button class="compact-device ${d.id === state.device ? 'selected' : ''}" data-device="${d.id}" aria-pressed="${d.id === state.device}"><span class="compact-device-title"><span class="equipment-id">${d.id}</span>${chip(status.label, status.tone)}</span><span class="compact-device-meta">${d.name}<span>${String(d.floor).padStart(2, '0')} F</span></span></button>`;
     }).join('') : `<div class="compact-empty">${icon('search')}<span>没有匹配的设备</span><button class="text-button" id="empty-reset">重置筛选</button></div>`;
     $('#filter-label').textContent = state.building !== 'all' || state.query || state.deviceState !== 'all' ? '已筛选' : '筛选';
     $('#filter-results').textContent = `匹配 ${list.length} 台设备`;
