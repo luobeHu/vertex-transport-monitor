@@ -1,3 +1,5 @@
+import { createCabinContent } from './cabin-data.js';
+
 export const TYPES = [
   { id: 'elevator', name: '电梯监控', short: '电梯', icon: 'arrow-up-down' },
   { id: 'hoist', name: '提升机监控', short: '提升机', icon: 'container' },
@@ -18,6 +20,7 @@ export const devices = TYPES.flatMap((type, ti) => Array.from({ length: 4 }, (_,
   capacity: ti === 0 ? '1,600 kg' : ti === 1 ? '2,000 kg' : '1,000 kg',
   speed: i === 0 ? (ti === 0 ? 1.5 : 0.8) : 0,
   online: i !== 3, updated: SNAPSHOT,
+  cabin: createCabinContent(`${['EL', 'HT', 'LS'][ti]}-${String(i + 1).padStart(2, '0')}`, i, ti),
 })));
 export const STATE = {
   running: { label: '运行中', tone: 'green', icon: 'arrow-up' },

@@ -33,7 +33,65 @@
       "capacity": "1,600 kg",
       "speed": 1.5,
       "online": true,
-      "updated": "2026-10-26 14:32:08"
+      "updated": "2026-10-26 14:32:08",
+      "cabin": {
+        "observed": true,
+        "floorCodes": [
+          {
+            "id": "DM-EL01-C01",
+            "name": "轿厢前部定位点",
+            "x": -0.65,
+            "z": 0.56,
+            "recognized": true,
+            "occupiedBy": null
+          },
+          {
+            "id": "DM-EL01-C02",
+            "name": "轿厢后部定位点",
+            "x": 0.52,
+            "z": -0.46,
+            "recognized": true,
+            "occupiedBy": "AGV-007"
+          }
+        ],
+        "cargo": [
+          {
+            "id": "HU-20261026-0001",
+            "name": "精密结构件",
+            "palletId": "PLT-EL01-001",
+            "cartons": 4,
+            "weightKg": 240,
+            "destination": "6 F · 线边暂存区",
+            "carrier": "agv",
+            "items": [
+              {
+                "sku": "MAT-AL-102",
+                "name": "铝合金结构件",
+                "quantity": 80,
+                "unit": "件"
+              },
+              {
+                "sku": "MAT-FX-208",
+                "name": "装配支架",
+                "quantity": 40,
+                "unit": "件"
+              }
+            ]
+          }
+        ],
+        "agv": {
+          "id": "AGV-007",
+          "model": "潜伏举升式",
+          "tareKg": 320,
+          "batteryPct": 87,
+          "floorCodeId": "DM-EL01-C02",
+          "carryingCargoIds": [
+            "HU-20261026-0001"
+          ],
+          "missionId": "RCS-EL01-1026-01",
+          "accompanying": true
+        }
+      }
     },
     {
       "id": "EL-02",
@@ -51,7 +109,30 @@
       "capacity": "1,600 kg",
       "speed": 0,
       "online": true,
-      "updated": "2026-10-26 14:32:08"
+      "updated": "2026-10-26 14:32:08",
+      "cabin": {
+        "observed": true,
+        "floorCodes": [
+          {
+            "id": "DM-EL02-C01",
+            "name": "轿厢前部定位点",
+            "x": -0.65,
+            "z": 0.56,
+            "recognized": true,
+            "occupiedBy": null
+          },
+          {
+            "id": "DM-EL02-C02",
+            "name": "轿厢后部定位点",
+            "x": 0.52,
+            "z": -0.46,
+            "recognized": true,
+            "occupiedBy": null
+          }
+        ],
+        "cargo": [],
+        "agv": null
+      }
     },
     {
       "id": "EL-03",
@@ -69,7 +150,65 @@
       "capacity": "1,600 kg",
       "speed": 0,
       "online": true,
-      "updated": "2026-10-26 14:32:08"
+      "updated": "2026-10-26 14:32:08",
+      "cabin": {
+        "observed": true,
+        "floorCodes": [
+          {
+            "id": "DM-EL03-C01",
+            "name": "轿厢前部定位点",
+            "x": -0.65,
+            "z": 0.56,
+            "recognized": true,
+            "occupiedBy": "HU-20261026-0021"
+          },
+          {
+            "id": "DM-EL03-C02",
+            "name": "轿厢后部定位点",
+            "x": 0.52,
+            "z": -0.46,
+            "recognized": true,
+            "occupiedBy": "HU-20261026-0022"
+          }
+        ],
+        "cargo": [
+          {
+            "id": "HU-20261026-0021",
+            "name": "机加工件",
+            "palletId": "PLT-EL03-001",
+            "cartons": 3,
+            "weightKg": 180,
+            "destination": "5 F · 待交接区",
+            "carrier": "direct",
+            "items": [
+              {
+                "sku": "MAT-MC-113",
+                "name": "机加工件",
+                "quantity": 90,
+                "unit": "件"
+              }
+            ]
+          },
+          {
+            "id": "HU-20261026-0022",
+            "name": "电子组件",
+            "palletId": "PLT-EL03-002",
+            "cartons": 3,
+            "weightKg": 220,
+            "destination": "5 F · 待交接区",
+            "carrier": "direct",
+            "items": [
+              {
+                "sku": "MAT-PC-305",
+                "name": "电子组件",
+                "quantity": 60,
+                "unit": "件"
+              }
+            ]
+          }
+        ],
+        "agv": null
+      }
     },
     {
       "id": "EL-04",
@@ -87,7 +226,30 @@
       "capacity": "1,600 kg",
       "speed": 0,
       "online": false,
-      "updated": "2026-10-26 14:32:08"
+      "updated": "2026-10-26 14:32:08",
+      "cabin": {
+        "observed": false,
+        "floorCodes": [
+          {
+            "id": "DM-EL04-C01",
+            "name": "轿厢前部定位点",
+            "x": -0.65,
+            "z": 0.56,
+            "recognized": false,
+            "occupiedBy": null
+          },
+          {
+            "id": "DM-EL04-C02",
+            "name": "轿厢后部定位点",
+            "x": 0.52,
+            "z": -0.46,
+            "recognized": false,
+            "occupiedBy": null
+          }
+        ],
+        "cargo": [],
+        "agv": null
+      }
     },
     {
       "id": "HT-01",
@@ -105,7 +267,65 @@
       "capacity": "2,000 kg",
       "speed": 0.8,
       "online": true,
-      "updated": "2026-10-26 14:32:08"
+      "updated": "2026-10-26 14:32:08",
+      "cabin": {
+        "observed": true,
+        "floorCodes": [
+          {
+            "id": "DM-HT01-C01",
+            "name": "轿厢前部定位点",
+            "x": -0.65,
+            "z": 0.56,
+            "recognized": true,
+            "occupiedBy": null
+          },
+          {
+            "id": "DM-HT01-C02",
+            "name": "轿厢后部定位点",
+            "x": 0.52,
+            "z": -0.46,
+            "recognized": true,
+            "occupiedBy": "AGV-017"
+          }
+        ],
+        "cargo": [
+          {
+            "id": "HU-20261026-0101",
+            "name": "精密结构件",
+            "palletId": "PLT-HT01-001",
+            "cartons": 4,
+            "weightKg": 240,
+            "destination": "6 F · 线边暂存区",
+            "carrier": "agv",
+            "items": [
+              {
+                "sku": "MAT-AL-102",
+                "name": "铝合金结构件",
+                "quantity": 80,
+                "unit": "件"
+              },
+              {
+                "sku": "MAT-FX-208",
+                "name": "装配支架",
+                "quantity": 40,
+                "unit": "件"
+              }
+            ]
+          }
+        ],
+        "agv": {
+          "id": "AGV-017",
+          "model": "潜伏举升式",
+          "tareKg": 320,
+          "batteryPct": 87,
+          "floorCodeId": "DM-HT01-C02",
+          "carryingCargoIds": [
+            "HU-20261026-0101"
+          ],
+          "missionId": "RCS-HT01-1026-01",
+          "accompanying": true
+        }
+      }
     },
     {
       "id": "HT-02",
@@ -123,7 +343,30 @@
       "capacity": "2,000 kg",
       "speed": 0,
       "online": true,
-      "updated": "2026-10-26 14:32:08"
+      "updated": "2026-10-26 14:32:08",
+      "cabin": {
+        "observed": true,
+        "floorCodes": [
+          {
+            "id": "DM-HT02-C01",
+            "name": "轿厢前部定位点",
+            "x": -0.65,
+            "z": 0.56,
+            "recognized": true,
+            "occupiedBy": null
+          },
+          {
+            "id": "DM-HT02-C02",
+            "name": "轿厢后部定位点",
+            "x": 0.52,
+            "z": -0.46,
+            "recognized": true,
+            "occupiedBy": null
+          }
+        ],
+        "cargo": [],
+        "agv": null
+      }
     },
     {
       "id": "HT-03",
@@ -141,7 +384,65 @@
       "capacity": "2,000 kg",
       "speed": 0,
       "online": true,
-      "updated": "2026-10-26 14:32:08"
+      "updated": "2026-10-26 14:32:08",
+      "cabin": {
+        "observed": true,
+        "floorCodes": [
+          {
+            "id": "DM-HT03-C01",
+            "name": "轿厢前部定位点",
+            "x": -0.65,
+            "z": 0.56,
+            "recognized": true,
+            "occupiedBy": "HU-20261026-0121"
+          },
+          {
+            "id": "DM-HT03-C02",
+            "name": "轿厢后部定位点",
+            "x": 0.52,
+            "z": -0.46,
+            "recognized": true,
+            "occupiedBy": "HU-20261026-0122"
+          }
+        ],
+        "cargo": [
+          {
+            "id": "HU-20261026-0121",
+            "name": "机加工件",
+            "palletId": "PLT-HT03-001",
+            "cartons": 3,
+            "weightKg": 180,
+            "destination": "5 F · 待交接区",
+            "carrier": "direct",
+            "items": [
+              {
+                "sku": "MAT-MC-113",
+                "name": "机加工件",
+                "quantity": 90,
+                "unit": "件"
+              }
+            ]
+          },
+          {
+            "id": "HU-20261026-0122",
+            "name": "电子组件",
+            "palletId": "PLT-HT03-002",
+            "cartons": 3,
+            "weightKg": 220,
+            "destination": "5 F · 待交接区",
+            "carrier": "direct",
+            "items": [
+              {
+                "sku": "MAT-PC-305",
+                "name": "电子组件",
+                "quantity": 60,
+                "unit": "件"
+              }
+            ]
+          }
+        ],
+        "agv": null
+      }
     },
     {
       "id": "HT-04",
@@ -159,7 +460,30 @@
       "capacity": "2,000 kg",
       "speed": 0,
       "online": false,
-      "updated": "2026-10-26 14:32:08"
+      "updated": "2026-10-26 14:32:08",
+      "cabin": {
+        "observed": false,
+        "floorCodes": [
+          {
+            "id": "DM-HT04-C01",
+            "name": "轿厢前部定位点",
+            "x": -0.65,
+            "z": 0.56,
+            "recognized": false,
+            "occupiedBy": null
+          },
+          {
+            "id": "DM-HT04-C02",
+            "name": "轿厢后部定位点",
+            "x": 0.52,
+            "z": -0.46,
+            "recognized": false,
+            "occupiedBy": null
+          }
+        ],
+        "cargo": [],
+        "agv": null
+      }
     },
     {
       "id": "LS-01",
@@ -177,7 +501,65 @@
       "capacity": "1,000 kg",
       "speed": 0.8,
       "online": true,
-      "updated": "2026-10-26 14:32:08"
+      "updated": "2026-10-26 14:32:08",
+      "cabin": {
+        "observed": true,
+        "floorCodes": [
+          {
+            "id": "DM-LS01-C01",
+            "name": "轿厢前部定位点",
+            "x": -0.65,
+            "z": 0.56,
+            "recognized": true,
+            "occupiedBy": null
+          },
+          {
+            "id": "DM-LS01-C02",
+            "name": "轿厢后部定位点",
+            "x": 0.52,
+            "z": -0.46,
+            "recognized": true,
+            "occupiedBy": "AGV-027"
+          }
+        ],
+        "cargo": [
+          {
+            "id": "HU-20261026-0201",
+            "name": "精密结构件",
+            "palletId": "PLT-LS01-001",
+            "cartons": 4,
+            "weightKg": 240,
+            "destination": "6 F · 线边暂存区",
+            "carrier": "agv",
+            "items": [
+              {
+                "sku": "MAT-AL-102",
+                "name": "铝合金结构件",
+                "quantity": 80,
+                "unit": "件"
+              },
+              {
+                "sku": "MAT-FX-208",
+                "name": "装配支架",
+                "quantity": 40,
+                "unit": "件"
+              }
+            ]
+          }
+        ],
+        "agv": {
+          "id": "AGV-027",
+          "model": "潜伏举升式",
+          "tareKg": 320,
+          "batteryPct": 87,
+          "floorCodeId": "DM-LS01-C02",
+          "carryingCargoIds": [
+            "HU-20261026-0201"
+          ],
+          "missionId": "RCS-LS01-1026-01",
+          "accompanying": true
+        }
+      }
     },
     {
       "id": "LS-02",
@@ -195,7 +577,30 @@
       "capacity": "1,000 kg",
       "speed": 0,
       "online": true,
-      "updated": "2026-10-26 14:32:08"
+      "updated": "2026-10-26 14:32:08",
+      "cabin": {
+        "observed": true,
+        "floorCodes": [
+          {
+            "id": "DM-LS02-C01",
+            "name": "轿厢前部定位点",
+            "x": -0.65,
+            "z": 0.56,
+            "recognized": true,
+            "occupiedBy": null
+          },
+          {
+            "id": "DM-LS02-C02",
+            "name": "轿厢后部定位点",
+            "x": 0.52,
+            "z": -0.46,
+            "recognized": true,
+            "occupiedBy": null
+          }
+        ],
+        "cargo": [],
+        "agv": null
+      }
     },
     {
       "id": "LS-03",
@@ -213,7 +618,65 @@
       "capacity": "1,000 kg",
       "speed": 0,
       "online": true,
-      "updated": "2026-10-26 14:32:08"
+      "updated": "2026-10-26 14:32:08",
+      "cabin": {
+        "observed": true,
+        "floorCodes": [
+          {
+            "id": "DM-LS03-C01",
+            "name": "轿厢前部定位点",
+            "x": -0.65,
+            "z": 0.56,
+            "recognized": true,
+            "occupiedBy": "HU-20261026-0221"
+          },
+          {
+            "id": "DM-LS03-C02",
+            "name": "轿厢后部定位点",
+            "x": 0.52,
+            "z": -0.46,
+            "recognized": true,
+            "occupiedBy": "HU-20261026-0222"
+          }
+        ],
+        "cargo": [
+          {
+            "id": "HU-20261026-0221",
+            "name": "机加工件",
+            "palletId": "PLT-LS03-001",
+            "cartons": 3,
+            "weightKg": 180,
+            "destination": "5 F · 待交接区",
+            "carrier": "direct",
+            "items": [
+              {
+                "sku": "MAT-MC-113",
+                "name": "机加工件",
+                "quantity": 90,
+                "unit": "件"
+              }
+            ]
+          },
+          {
+            "id": "HU-20261026-0222",
+            "name": "电子组件",
+            "palletId": "PLT-LS03-002",
+            "cartons": 3,
+            "weightKg": 220,
+            "destination": "5 F · 待交接区",
+            "carrier": "direct",
+            "items": [
+              {
+                "sku": "MAT-PC-305",
+                "name": "电子组件",
+                "quantity": 60,
+                "unit": "件"
+              }
+            ]
+          }
+        ],
+        "agv": null
+      }
     },
     {
       "id": "LS-04",
@@ -231,7 +694,30 @@
       "capacity": "1,000 kg",
       "speed": 0,
       "online": false,
-      "updated": "2026-10-26 14:32:08"
+      "updated": "2026-10-26 14:32:08",
+      "cabin": {
+        "observed": false,
+        "floorCodes": [
+          {
+            "id": "DM-LS04-C01",
+            "name": "轿厢前部定位点",
+            "x": -0.65,
+            "z": 0.56,
+            "recognized": false,
+            "occupiedBy": null
+          },
+          {
+            "id": "DM-LS04-C02",
+            "name": "轿厢后部定位点",
+            "x": 0.52,
+            "z": -0.46,
+            "recognized": false,
+            "occupiedBy": null
+          }
+        ],
+        "cargo": [],
+        "agv": null
+      }
     }
   ],
   "tasks": [

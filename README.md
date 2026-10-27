@@ -25,6 +25,30 @@ npm run dev
 
 模拟行程独立于 300 条任务记录，不会改写任务数量或完成状态。主界面展示实时模拟楼层、方向与门状态；其他设备使用快照中的门状态，离线设备显示“门状态未知”。
 
+### 轿厢内地码、货物与 AGV
+
+关键数据直接标注在三维图内：地码编号、货物托数/箱数/重量/货物编号，以及随梯 AGV 编号、电量和定位点。引线连接到轿厢里的对应位置，随轿厢升降及视角变化实时更新。点击标注或可见模型对象打开完整明细。
+
+点击图中工具栏的货箱图标可切换“轿厢近景”，镜头随轿厢移动，顶部使用剖视方式让地码、AGV 和货物清晰可见，门状态仍按原模拟流程展示；再次点击返回设备全景。也可[直接打开 EL-01 轿厢近景](https://luobehu.github.io/vertex-transport-monitor/?device=EL-01&view=cabin)。
+
+- `EL-01`：AGV-007 搭载 1 托 4 箱精密结构件，货物 240 kg；加上 AGV 自重 320 kg，示例总载荷 560 kg。
+- `EL-02`：空载、无随梯 AGV。
+- `EL-03`：2 托 6 箱货物直接随梯，无 AGV。
+- `EL-04`：离线，载荷与地码识读状态未知，不当作空载。
+
+地码固定在轿厢地板，编码不随楼层变化；二维码纹理编码值与展示编号一致。货物、AGV、地码和定位标注共同随轿厢移动，演示不模拟装卸或 AGV 进出梯。手机端将摘要排列在图内底部，详情仍按需弹出。
+
+静态 JSON 和 `getSnapshot().devices` 中的 `cabin` 字段提供：
+
+| 字段 | 含义 |
+| --- | --- |
+| `observed` | 是否能确认载荷信息，离线为 false |
+| `floorCodes` | 地码 id、轿厢局部坐标 x/z、识读状态和占用对象 |
+| `cargo` | 货物 id、托盘编号、箱数、重量、物料清单、目的位置和承载方式 |
+| `agv` | 随梯 AGV 编号、电量、自重、定位地码、调度任务和搭载货物关系，无随梯 AGV 时为 null |
+
+示例载荷是固定演示数据，重量是样例估算，不代表称重传感器实时读数。
+
 - 点击顶部“设备在线”查看设备汇总，选择设备后联动主界面。
 - 点击设备状态、模式、告警或右上角更多按钮查看完整参数和告警说明。
 - 点击“未完成 / 已完成”打开任务记录弹窗，继续搜索、筛选、分页和导出；关闭单条指令详情后返回任务记录。
@@ -53,6 +77,8 @@ npm run dev
 | `status` | `pending` / `completed` | 指令分类，默认未完成 |
 | `command` | 完整指令编号 | 选择关联设备和状态，打开指令详情 |
 | `embed` | `1` | 隐藏外层导航和顶栏 |
+| `cabin` | `floorCodes` / `cargo` / `agv` | 打开当前设备的轿厢地码、货物或 AGV 明细 |
+| `view` | `cabin` | 直接进入随梯跟随的轿厢剖视近景 |
 
 示例：
 
@@ -102,6 +128,7 @@ window.addEventListener('message', event => {
 | `selectDevice` | `deviceId` | 选中的设备 |
 | `setStatus` | `status` | `{ status }` |
 | `openCommand` | `commandId` | 对应指令 |
+| `openCabinInfo` | `kind`，取值 floorCodes / cargo / agv | 当前设备的轿厢信息，并打开对应明细 |
 
 页面仅接受直接父窗口的消息，响应发回该窗口的源；不接受脚本或外部 URL。所有数据均为公开模拟数据。接入真实业务数据时，应由宿主配置可信来源与权限校验。
 
@@ -114,6 +141,7 @@ window.TransportMonitor.getSnapshot();
 window.TransportMonitor.selectDevice('HT-01');
 window.TransportMonitor.setStatus('completed');
 window.TransportMonitor.openCommand('CMD-20261026-0401');
+window.TransportMonitor.openCabinInfo('cargo');
 window.addEventListener('transport:selection', ({ detail }) => console.log(detail));
 ```
 

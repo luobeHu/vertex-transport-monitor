@@ -3,12 +3,13 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { DEMO_DEVICE_ID, sampleElevatorDemo } from './simulation.js';
+import { createCabinPayload } from './cabin-model.js';
 
-export function createTwin(container, onSelectFloor, onDemoUpdate) {
+export function createTwin(container, onSelectFloor, onDemoUpdate, payloadOptions = {}) {
   let renderer;
   try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); } catch {
     container.innerHTML = '<div class="webgl-fallback"><span>3D 视图暂不可用</span><p>当前浏览器未启用 WebGL，设备运行数据仍可正常查看。</p></div>';
-    return { update() {}, reset() {}, zoom() {}, front() {}, toggleDemo() {}, restartDemo() {}, getDemoState: () => null, dispose() {} };
+    return { update() {}, reset() {}, zoom() {}, front() {}, toggleCabinView:()=>false, projectPayload() {}, toggleDemo() {}, restartDemo() {}, getDemoState: () => null, dispose() {} };
   }
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.shadowMap.enabled = true;
@@ -59,6 +60,9 @@ export function createTwin(container, onSelectFloor, onDemoUpdate) {
   const gold = new THREE.MeshStandardMaterial({ color: 0xa79665, metalness: .7, roughness: .34 });
   let group = new THREE.Group(), cabin = null, selectedDevice = null, floorMeshes = [], targetY = 0, dynamicMaterials = [];
   let doorGroups = [], floorHighlights = [], counterweight = null, wheels = [], landingLight = null, suspensionRopes = [];
+  let payload = null;
+  let cabinRoof = null;
+  let cabinView = false;
   let demoElapsed = 0, demoPaused = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let lastFrame = null, lastEmit = -Infinity, highlightedFloor = null;
   let needsRender = true;
@@ -72,8 +76,9 @@ export function createTwin(container, onSelectFloor, onDemoUpdate) {
     const rect = renderer.domElement.getBoundingClientRect();
     pointer.set((e.clientX - rect.left) / rect.width * 2 - 1, -(e.clientY - rect.top) / rect.height * 2 + 1);
     raycaster.setFromCamera(pointer, camera);
-    const hit = raycaster.intersectObjects(floorMeshes)[0];
-    if (hit) onSelectFloor?.(hit.object.userData.floor);
+    const hit = raycaster.intersectObjects(group.children,true).find(h=>h.object.isMesh && !(h.object.material?.transparent && h.object.material.opacity<.8 && !h.object.userData.cabinPayload));
+    if(hit?.object.userData.cabinPayload) payloadOptions.onSelect?.(hit.object.userData.cabinPayload);
+    else if(hit?.object.userData.floor) onSelectFloor?.(hit.object.userData.floor);
   });
   function box(w, h, d, x, y, z, material, parent = group) {
     const geometry = Math.min(w,h,d) > .18 ? new RoundedBoxGeometry(w,h,d,2,Math.min(w,h,d)*.15) : new THREE.BoxGeometry(w,h,d);
@@ -88,10 +93,11 @@ export function createTwin(container, onSelectFloor, onDemoUpdate) {
     sprite.scale.set(1.15, .43, 1); sprite.position.set(x, y, .5); group.add(sprite);
   }
   function clear() {
+    payload?.dispose(); payload = null;
     group.traverse(obj => { obj.geometry?.dispose(); if (obj.isSprite) { obj.material.map?.dispose(); obj.material.dispose(); } });
     dynamicMaterials.forEach(m => m.dispose()); dynamicMaterials = [];
     scene.remove(group); group = new THREE.Group(); scene.add(group); floorMeshes = []; needsRender = true;
-    doorGroups = []; floorHighlights = []; wheels = []; suspensionRopes = []; counterweight = null; landingLight = null; highlightedFloor = null;
+    doorGroups = []; floorHighlights = []; wheels = []; suspensionRopes = []; counterweight = null; landingLight = null; cabinRoof = null; highlightedFloor = null;
   }
   function update(device) {
     if (selectedDevice?.id === device.id) { selectedDevice = device; applyPose(getDemoState() || staticPose(device)); return; }
@@ -142,14 +148,17 @@ export function createTwin(container, onSelectFloor, onDemoUpdate) {
     cabin = new THREE.Group(); group.add(cabin);
     targetY = (device.floor - 1) * floorH + .21; cabin.position.y = targetY;
     box(2.1, .13, 1.85, 0, 0, 0, dark, cabin);
-    box(2.1, .12, 1.85, 0, 1.08, 0, green, cabin);
+    cabinRoof = box(2.1, .12, 1.85, 0, 1.08, 0, green, cabin);
     for (const x of [-1, 1]) for (const z of [-.85, .85]) box(.07, 1, .07, x, .54, z, green, cabin);
     box(1.93, .92, .045, 0, .55, -.85, glass, cabin);
     for (const x of [-1, 1]) box(.04, .92, 1.7, x, .55, 0, glass, cabin);
     // Each door leaf and its window move together, revealing the lit cabin interior.
     for (const side of [-1, 1]) {
       const leaf = new THREE.Group(); leaf.userData.side = side; cabin.add(leaf); doorGroups.push(leaf);
-      box(.94, .93, .055, 0, .55, .86, green, leaf);
+      // Real window openings keep the onboard cargo visible through closed doors.
+      box(.94,.445,.055,0,.3075,.86,green,leaf);
+      box(.94,.205,.055,0,.9125,.86,green,leaf);
+      for(const x of [-.3675,.3675]) box(.205,.28,.055,x,.67,.86,green,leaf);
       box(.015, .93, .06, -side * .475, .55, .9, dark, leaf);
       box(.53, .28, .015, 0, .67, .9, glass, leaf);
     }
@@ -161,9 +170,8 @@ export function createTwin(container, onSelectFloor, onDemoUpdate) {
     box(.025, .9, .02, .98, .54, .92, led, cabin);
     if (isHoist) {
       for (let j = 0; j < 9; j++) { box(.035, .8, .035, -.9 + j * .225, .52, .96, gold, cabin); }
-      box(1.3, .12, 1.05, 0, .18, 0, gold, cabin);
-      box(.65, .5, .65, 0, .49, -.15, light, cabin);
     }
+    if(device.cabin) payload = createCabinPayload(cabin,device.cabin,box);
     applyPose(getDemoState() || staticPose(device));
     controls.target.set(0, height * .47, 0); reset();
   }
@@ -172,6 +180,7 @@ export function createTwin(container, onSelectFloor, onDemoUpdate) {
   function applyPose(pose) {
     if (!cabin) return;
     cabin.position.y = (pose.positionFloor - 1) * 1.22 + .21;
+    if(cabinView) { const delta=cabin.position.y+.55-controls.target.y; controls.target.y+=delta;camera.position.y+=delta; }
     for (const rope of suspensionRopes) {
       const bottom = cabin.position.y + 1.15, top = selectedDevice.floors * 1.22 + .4;
       rope.scale.y = Math.max(.05, top - bottom); rope.position.y = bottom + rope.scale.y / 2;
@@ -189,9 +198,26 @@ export function createTwin(container, onSelectFloor, onDemoUpdate) {
   function emitDemo() { const s = getDemoState(); if (s) { applyPose(s); onDemoUpdate?.(s); } }
   function toggleDemo() { demoPaused = !demoPaused; emitDemo(); return getDemoState(); }
   function restartDemo() { demoElapsed = 0; demoPaused = false; emitDemo(); return getDemoState(); }
-  function reset() { const h = selectedDevice?.floors * 1.22 || 9.76; camera.position.set(12, h * .6 + 3.5, 17); controls.target.set(0, h * .46, 0); controls.update(); }
-  function zoom(direction) { const delta = camera.position.clone().sub(controls.target); delta.multiplyScalar(direction > 0 ? .86 : 1.16); const l = Math.max(10, Math.min(30, delta.length())); delta.setLength(l); camera.position.copy(controls.target).add(delta); controls.update(); }
-  function front() { camera.position.set(0, controls.target.y + 1.2, 21); controls.update(); }
+  function reset() { cabinView=false;if(cabinRoof)cabinRoof.visible=true;controls.minDistance=10;controls.maxDistance=30; const h = selectedDevice?.floors * 1.22 || 9.76; camera.position.set(12, h * .6 + 3.5, 17); controls.target.set(0, h * .46, 0); controls.update();payloadOptions.onViewChange?.(false); }
+  function zoom(direction) { const delta = camera.position.clone().sub(controls.target); delta.multiplyScalar(direction > 0 ? .86 : 1.16); const l = Math.max(controls.minDistance, Math.min(controls.maxDistance, delta.length())); delta.setLength(l); camera.position.copy(controls.target).add(delta); controls.update(); }
+  function front() { camera.position.set(0, controls.target.y + (cabinView ? .85 : 1.2), cabinView ? 6 : 21); controls.update(); }
+  function toggleCabinView() {
+    if(!cabin)return false;
+    if(cabinView) { reset();return false; }
+    cabinView=true;if(cabinRoof)cabinRoof.visible=false;controls.minDistance=3.5;controls.maxDistance=12;
+    controls.target.set(0,cabin.position.y+.55,0);camera.position.set(3.3,cabin.position.y+3.3,4.6);controls.update();needsRender=true;
+    payloadOptions.onViewChange?.(true);return true;
+  }
+  function projectPayload() {
+    if(!payload || !payloadOptions.onProject)return;
+    scene.updateMatrixWorld();camera.updateMatrixWorld();
+    const rect=container.getBoundingClientRect(), result={};
+    for(const [kind,object] of Object.entries(payload.anchors)) {
+      const p=object.getWorldPosition(new THREE.Vector3()).project(camera);
+      result[kind]={x:(p.x+1)*rect.width/2,y:(1-p.y)*rect.height/2+container.offsetTop};
+    }
+    payloadOptions.onProject(result);
+  }
   const observer = new ResizeObserver(() => { const { width, height } = container.getBoundingClientRect(); if (!width || !height) return; renderer.setSize(width, height); camera.aspect = width / height; camera.updateProjectionMatrix(); needsRender = true; }); observer.observe(container);
   let raf;
   function draw(now = performance.now()) {
@@ -201,8 +227,8 @@ export function createTwin(container, onSelectFloor, onDemoUpdate) {
       if (!demoPaused && !document.hidden) { demoElapsed += dt; applyPose(getDemoState()); }
       if (now - lastEmit > 120) { onDemoUpdate?.(getDemoState()); lastEmit = now; }
     }
-    controls.update(); if (needsRender) { renderer.render(scene, camera); needsRender = false; }
+    controls.update(); if (needsRender) { renderer.render(scene, camera); projectPayload(); needsRender = false; }
   }
   draw();
-  return { update, reset, zoom, front, toggleDemo, restartDemo, getDemoState, dispose() { cancelAnimationFrame(raf); observer.disconnect(); controls.dispose(); environment.dispose(); renderer.dispose(); clear(); steel.dispose(); light.dispose(); dark.dispose(); gold.dispose(); ground.geometry.dispose(); groundMaterial.dispose(); stage.geometry.dispose(); stage.material.dispose(); ringMaterial.dispose(); } };
+  return { update, reset, zoom, front, toggleCabinView, projectPayload, toggleDemo, restartDemo, getDemoState, dispose() { cancelAnimationFrame(raf); observer.disconnect(); controls.dispose(); environment.dispose(); renderer.dispose(); clear(); steel.dispose(); light.dispose(); dark.dispose(); gold.dispose(); ground.geometry.dispose(); groundMaterial.dispose(); stage.geometry.dispose(); stage.material.dispose(); ringMaterial.dispose(); } };
 }
