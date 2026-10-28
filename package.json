@@ -5,18 +5,25 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "node scripts/export-data.mjs && vite build",
+    "build": "npm run build:legacy && npm run build:vue",
     "preview": "vite preview --host 127.0.0.1",
-    "test": "node --test tests/*.test.js"
+    "test": "node --test tests/*.test.js vue3/tests/*.test.js",
+    "dev:vue": "vite --config vue3/vite.config.js",
+    "build:legacy": "node scripts/export-data.mjs && vite build",
+    "build:vue": "node vue3/scripts/export-data.mjs && vite build --config vue3/vite.config.js --outDir ../dist/vue3 --emptyOutDir",
+    "test:vue": "node --test vue3/tests/*.test.js"
   },
   "dependencies": {
     "@fontsource-variable/dm-sans": "^5.3.0",
     "@fontsource/ibm-plex-mono": "^5.3.0",
+    "@lucide/vue": "^1.63.0",
     "lucide": "^0.468.0",
     "qrcode-generator": "^2.0.4",
-    "three": "^0.180.0"
+    "three": "^0.180.0",
+    "vue": "^3.5.44"
   },
   "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.4",
     "vite": "^6.1.0"
   }
 }

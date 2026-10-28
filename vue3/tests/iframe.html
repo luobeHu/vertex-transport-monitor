@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>Vue Agent iframe 接入验收</title>
+  </head>
+  <body>
+    <button id="select-device">通过 postMessage 选择 LS-03</button>
+    <pre id="response"></pre>
+    <iframe
+      id="monitor"
+      src="../?embed=1&device=EL-01"
+      title="监控 Vue 3"
+      style="width: 100%; height: 900px; border: 0"
+    ></iframe>
+    <script type="module">
+      const frame = document.querySelector("#monitor");
+      document
+        .querySelector("#select-device")
+        .addEventListener("click", () =>
+          frame.contentWindow.postMessage(
+            {
+              channel: "vertex-monitor",
+              requestId: "iframe-test",
+              action: "selectDevice",
+              deviceId: "LS-03",
+            },
+            location.origin,
+          ),
+        );
+      window.addEventListener("message", (event) => {
+        if (
+          event.source === frame.contentWindow &&
+          event.origin === location.origin &&
+          event.data?.channel === "vertex-monitor"
+        )
+          document.querySelector("#response").textContent = JSON.stringify(
+            event.data,
+          );
+      });
+    </script>
+  </body>
+</html>

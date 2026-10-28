@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>Vue 组件宿主验收</title>
+    <style>
+      body {
+        margin: 0;
+      }
+      #host-controls {
+        padding: 12px;
+        background: #fff;
+        display: flex;
+        gap: 10px;
+        position: relative;
+        z-index: 100;
+      }
+      #host-controls button {
+        color: rgb(190, 0, 0);
+        padding: 6px 10px;
+      }
+      #host-result {
+        margin: 0;
+        padding: 12px;
+        background: #f5f5f5;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="host"></div>
+    <script type="module" src="./host.js"></script>
+  </body>
+</html>

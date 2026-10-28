@@ -161,3 +161,11 @@ window.addEventListener('transport:selection', ({ detail }) => console.log(detai
 `.github/workflows/deploy.yml` 在推送 `main` 时自动执行安装、数据校验、静态构建和 GitHub Pages 发布。仓库的 **Settings → Pages → Source** 使用 **GitHub Actions**。
 
 技术栈：Vite、原生 JavaScript、Three.js、Lucide。字体为 DM Sans 与 IBM Plex Mono，许可证随 npm 依赖提供。
+
+## Vue 3 组件版本
+
+新增独立的 [`vue3/`](./vue3/) 项目，保留本页面的模型、自动镜头、AGV 进出梯和主从查询功能。
+
+- [Vue 3 在线演示](https://luobehu.github.io/vertex-transport-monitor/vue3/?device=EL-01&view=cabin)
+- [运行、组件 Props / Ref 方法与服务接入说明](./vue3/README.md)
+- 原版页面继续位于根路径；Vue 版部署于 `/vue3/`，可独立运行和构建。
