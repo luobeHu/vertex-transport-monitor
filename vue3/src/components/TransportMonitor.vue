@@ -21,6 +21,7 @@ import {
 } from "../core/data.js";
 import { DEMO_DEVICE_ID } from "../core/simulation.js";
 import { useMonitor } from "../composables/useMonitor.js";
+import { detailQuery } from "../core/navigation.js";
 import TwinScene from "./TwinScene.vue";
 import Icon from "./Icon.vue";
 import StatusChip from "./StatusChip.vue";
@@ -150,6 +151,18 @@ function showRecords(status = state.status, floor = "all") {
   recordFloor.value = floor;
   recordsOpen.value = true;
 }
+function syncDetailUrl(kind, commandId) {
+  if (!props.syncUrl || typeof window === "undefined") return;
+  const query = detailQuery(location.search, kind, commandId);
+  history.replaceState(
+    null,
+    "",
+    `${location.pathname}?${query}${location.hash}`,
+  );
+}
+watch(detailsOpen, (open) => {
+  if (!open) syncDetailUrl(null);
+});
 function showDetail(kind, extra = {}) {
   if (!current.value && !["help", "agent"].includes(kind))
     throw new Error("请先选择设备");
@@ -159,6 +172,7 @@ function showDetail(kind, extra = {}) {
     ...extra,
   };
   detailsOpen.value = true;
+  syncDetailUrl(kind, extra.command?.id);
 }
 function openCommand(id, fromRecords = false) {
   const command = props.tasks.find((t) => t.id === id);
