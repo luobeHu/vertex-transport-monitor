@@ -349,35 +349,34 @@ onBeforeUnmount(() => {
           <Icon name="refresh-cw" /><span>刷新</span>
         </button>
       </div>
-      <div class="compact-typebar">
-        <div class="type-tabs" role="tablist" aria-label="设备类型">
-          <button
-            v-for="t in TYPES"
-            :key="t.id"
-            role="tab"
-            :class="{ active: state.type === t.id }"
-            :aria-selected="state.type === t.id"
-            @click="chooseType(t.id)"
-          >
-            {{ t.name }}
-          </button>
-        </div>
-        <button
-          class="overview-button"
-          aria-label="查看设备汇总统计"
-          @click="overviewOpen = true"
-        >
-          <span class="overview-summary"
-            ><span
-              >{{ scopeSummary.online }}/{{ scopeSummary.total }} 设备在线</span
-            ><span v-if="scopeSummary.alarms" class="overview-alert"
-              >{{ scopeSummary.alarms }} 台告警</span
-            ></span
-          ><Icon name="chevron-right" />
-        </button>
-      </div>
       <div class="compact-workspace">
         <section class="panel twin-panel" aria-label="设备数字孪生与状态">
+          <div class="diagram-navigation">
+            <div class="scene-type-switch" role="group" aria-label="设备类型">
+              <button
+                v-for="t in TYPES"
+                :key="t.id"
+                :class="{ active: state.type === t.id }"
+                :aria-pressed="state.type === t.id"
+                @click="chooseType(t.id)"
+              >
+                {{ t.name }}
+              </button>
+            </div>
+            <button
+              class="overview-button"
+              aria-label="查看设备汇总统计"
+              @click="overviewOpen = true"
+            >
+              <span class="overview-summary"
+                ><span
+                  >{{ scopeSummary.online }}/{{ scopeSummary.total }} 设备在线</span
+                ><span v-if="scopeSummary.alarms" class="overview-alert"
+                  >{{ scopeSummary.alarms }} 台告警</span
+                ></span
+              ><Icon name="chevron-right" />
+            </button>
+          </div>
           <section
             class="compact-device-section equipment-rail"
             aria-label="选择设备"
