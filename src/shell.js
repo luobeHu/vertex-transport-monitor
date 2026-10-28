@@ -13,6 +13,7 @@ export function renderShell(TYPES, icon) {
       <section class="panel twin-panel" aria-label="设备数字孪生与状态">
     <section class="compact-device-section equipment-rail" aria-labelledby="devices-title"><div class="compact-section-heading"><h2 id="devices-title">选择设备 <span class="count" id="device-count"></span></h2><button class="text-button" id="open-filters" aria-label="筛选设备" title="筛选设备">${icon('sliders-horizontal')}<span id="filter-label">筛选</span></button></div><div id="devices-list" class="compact-device-list"></div></section>
         <div class="twin-main">
+          <div class="diagram-hud" id="telemetry"></div>
           <div class="twin-heading"><span class="small-eyebrow">数字孪生视图 <span id="demo-badge" class="simulation-badge" hidden>循环运行演示</span></span><button class="icon-button" id="expand-twin" aria-label="放大三维视图" title="放大三维视图">${icon('maximize-2')}</button></div>
           <div class="scene-label" id="scene-label"></div><div id="twin-canvas" class="twin-canvas"></div><div class="scene-empty" hidden>暂无符合条件的设备</div><div class="scene-floor-note" id="floor-note"></div>
           <div id="cabin-overlay" class="cabin-overlay" aria-label="轿厢内地码、货物与 AGV 标注" hidden></div>
@@ -20,7 +21,7 @@ export function renderShell(TYPES, icon) {
           <div id="demo-controls" class="simulation-controls" hidden><span data-demo-stage>上行中 · 门已关闭</span><button id="toggle-demo" aria-label="暂停演示">${icon('circle-pause')}<span data-demo-toggle>暂停</span></button><button id="restart-demo" aria-label="重播运行演示" title="重播运行演示">${icon('rotate-ccw')}</button></div>
           <div class="scene-bottom"><span>拖动旋转 · 点击楼层查看任务</span><span>示意模型</span></div>
         </div>
-        <div class="telemetry" id="telemetry"></div>
+
       </section>
     </div>
     <footer class="compact-footer"><span>任务快照 · 2026.10.26 14:32:08</span><span>点击状态与任务，查看详细信息</span></footer>

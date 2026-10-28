@@ -33,3 +33,11 @@ export function summarizeCabin(cabin) {
     cartons:cabin.cargo.reduce((sum,item)=>sum+item.cartons,0), cargoKg, agvKg:cabin.agv?.tareKg || 0,
     totalKg:cargoKg + (cabin.agv?.tareKg || 0), hasAgv:!!cabin.agv };
 }
+
+export function summarizeOnboard(cabin,live) {
+  const s=summarizeCabin(cabin);
+  if(!s.observed)return {...s,occupancy:'unknown',weightKg:null};
+  if(!live?.simulation)return {...s,occupancy:s.totalKg?'loaded':'empty',weightKg:s.totalKg};
+  if(live.occupancy==='empty')return {...s,pallets:0,cartons:0,cargoKg:0,agvKg:0,totalKg:0,hasAgv:false,occupancy:'empty',weightKg:0};
+  return {...s,occupancy:live.occupancy,weightKg:live.occupancy==='loaded'?s.totalKg:null};
+}

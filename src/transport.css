@@ -1,0 +1,70 @@
+/* The 3D diagram is the primary dashboard; operational data stays within its frame. */
+.compact-workspace .twin-panel,.compact-workspace .twin-panel.expanded { grid-template-columns:190px minmax(0,1fr); }
+.compact-workspace .twin-main { min-height:640px; }
+.compact-workspace .twin-canvas { top:110px; bottom:115px; height:calc(100% - 225px); }
+#telemetry.diagram-hud { position:absolute;inset:0;z-index:4;pointer-events:none; padding:0;background:none;border:0;display:block; }
+.diagram-key-state { position:absolute;right:62px;top:18px;display:flex;gap:20px;align-items:center; }
+.diagram-key-state>div:first-child>span { display:block;color:#7b8c70;font-size:10px;margin-bottom:4px; }
+.diagram-key-state strong { color:#32513b;font:400 44px/1 var(--mono);letter-spacing:-2px; }
+.diagram-key-state strong>small { font-size:13px;color:#8a9a7e;letter-spacing:0; }
+.diagram-status { display:flex;flex-direction:column;gap:7px;align-items:flex-start; }
+.diagram-status .door-state { font-size:11px;color:#456a3a; }
+.diagram-status .compact-direction { padding:0;font-size:10px; }
+.diagram-status>button { pointer-events:auto;display:flex;align-items:center;gap:9px;padding:0; }
+.diagram-status>button>small { font-size:9px;color:#7f9073; }
+.diagram-status .tag { font-size:9px;background:transparent;padding:0; }
+.diagram-device-details { pointer-events:auto;position:absolute;top:57px;right:19px;width:30px;height:30px;border-radius:5px;color:#8b9c7b; }
+.diagram-device-details:hover { background:#e8f0df; }
+.diagram-process { position:absolute;top:110px;left:50%;transform:translateX(-50%);display:grid;grid-template-columns:repeat(4,1fr);width:min(560px,calc(100% - 44px));background:#f9fcf3ed;border:1px solid #dce6cf;border-radius:7px;padding:4px;box-shadow:0 2px 10px #284c2105;pointer-events:auto; }
+.diagram-process>button { display:flex;align-items:center;justify-content:center;gap:7px;padding:8px 9px;color:#7f9371;border-radius:4px;white-space:nowrap; }
+.diagram-process>button>b { font:9px var(--mono);opacity:.7; }
+.diagram-process>button>span { font-size:10px; }
+.diagram-process>button.active { background:#e2edd6;color:#416734; }
+.diagram-process>button:hover { background:#edf4e3; }
+.diagram-phase { position:absolute;left:22px;bottom:115px;display:flex;flex-direction:column;gap:5px; }
+.diagram-phase>span { font-size:12px;color:#4f7240;font-weight:500; }
+.diagram-phase>small { font-size:8px;color:#8a9c7b; }
+.diagram-load { position:absolute;left:50%;bottom:113px;transform:translateX(-50%);background:#f5faedef;border:1px solid #cdddbb;padding:9px 16px;border-radius:7px;display:flex;flex-direction:column;align-items:center;gap:5px; }
+.diagram-load>span { color:#4a7139;font-size:14px;font-weight:550;white-space:nowrap; }
+.diagram-load>small { color:#7c926c;font-size:9px;white-space:nowrap; }
+.diagram-load[data-occupancy="empty"] { background:#edf5f5ee;border-color:#c7dcdc; }
+.diagram-load[data-occupancy="empty"]>span { color:#527a7c; }
+.diagram-load[data-occupancy="boarding"],.diagram-load[data-occupancy="alighting"] { background:#fbf6e9ee;border-color:#e0d6b5; }
+.diagram-load[data-occupancy="boarding"]>span,.diagram-load[data-occupancy="alighting"]>span { color:#957e45; }
+.diagram-task-actions { position:absolute;bottom:46px;right:22px;display:flex;gap:8px;pointer-events:auto; }
+.diagram-task-actions>button { display:flex;align-items:center;gap:9px;border:1px solid #cbdac0;border-radius:5px;padding:11px 12px;background:#f8fcf1ee;font-size:10px;color:#607f4d; }
+.diagram-task-actions>button:hover { background:#e9f2df; }
+.diagram-task-actions b { font:500 12px var(--mono); }
+.diagram-task-actions svg { width:11px;height:11px; }
+.diagram-dimensions { position:absolute;left:22px;bottom:90px;color:#819477;font:8px var(--mono);letter-spacing:.2px; }
+.compact-workspace .simulation-controls { bottom:45px; }
+.compact-workspace .view-toolbar,.is-simulating .view-toolbar { bottom:91px;right:22px;top:auto; }
+.compact-workspace .scene-bottom { padding:13px 22px; }
+.cabin-overlay { z-index:3; }
+.cabin-callout { pointer-events:auto; }
+.diagram-hud .empty-state { padding:0; }
+@media(min-width:1600px){.compact-workspace .twin-panel{grid-template-columns:205px minmax(0,1fr)}.compact-workspace .twin-main{min-height:690px}}
+@media(max-width:1100px){
+  .compact-workspace .twin-panel,.compact-workspace .twin-panel.expanded{grid-template-columns:160px minmax(0,1fr)}
+  .diagram-phase{bottom:160px}.diagram-load{bottom:110px}.diagram-dimensions{font-size:7px}.diagram-key-state{right:59px;gap:15px}
+}
+@media(max-width:800px){
+  .compact-workspace .twin-panel,.compact-workspace .twin-panel.expanded{grid-template-columns:1fr}
+  .equipment-rail{grid-column:1;grid-row:1}.compact-workspace .twin-main{grid-row:2;min-height:650px}
+}
+@media(max-width:560px){
+  .compact-workspace .twin-main{min-height:840px;grid-row:2}
+  .compact-workspace .twin-canvas{top:162px;bottom:350px;height:calc(100% - 512px)}
+  .compact-workspace .twin-heading{left:16px;top:16px}.compact-workspace .scene-label{left:17px;top:60px}
+  .diagram-key-state{top:52px;right:17px;gap:10px}.diagram-key-state strong{font-size:35px}.diagram-key-state>div:first-child>span{font-size:8px}
+  .diagram-status{gap:5px}.diagram-status>button>small{display:none}.diagram-status .door-state{font-size:9px}.diagram-status .compact-direction{font-size:8px}
+  .diagram-device-details{top:17px;right:51px}
+  .diagram-process{top:117px;width:calc(100% - 28px)}.diagram-process>button{padding:8px 3px;gap:3px}.diagram-process>button>span{font-size:8px}.diagram-process>button>b{font-size:7px}
+  .diagram-phase{left:16px;bottom:300px}.diagram-phase>span{font-size:10px}.diagram-phase>small{font-size:7px}
+  .diagram-load{bottom:235px;width:calc(100% - 32px);padding:9px 12px}.diagram-load>span{font-size:13px}
+  .diagram-dimensions{left:16px;right:16px;bottom:344px;font-size:7px;line-height:1.8}
+  .diagram-task-actions{bottom:43px;right:16px;left:16px;justify-content:space-between}.diagram-task-actions>button{flex:1;justify-content:center;font-size:10px;padding:10px}
+  .compact-workspace .simulation-controls{left:16px;right:16px;bottom:91px}.compact-workspace .simulation-controls>span{font-size:9px}
+  .compact-workspace .view-toolbar,.is-simulating .view-toolbar{top:auto;bottom:300px;right:16px}
+  .compact-workspace .scene-bottom{padding:12px 16px;font-size:8px}
+}
