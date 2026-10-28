@@ -7,7 +7,7 @@ export function createCabinOverlay({ $, icon, getCurrent, showDialog }) {
     if(!device) { host.hidden=true;return; }
     cabin=device.cabin;host.hidden=false;
     const s=summarizeCabin(cabin), agv=cabin.agv;
-    host.innerHTML=`<svg class="cabin-leaders" aria-hidden="true"><polyline data-leader="floorCodes"/><circle data-point="floorCodes" r="3"/><polyline data-leader="cargo"/><circle data-point="cargo" r="3"/>${agv ? '<polyline data-leader="agv"/><circle data-point="agv" r="3"/>' : ''}</svg>
+    host.innerHTML=`<div class="shaft-floor-markers" aria-label="井道楼层">${Array.from({length:device.floors},(_,i)=>`<span data-shaft-floor="${i+1}">${String(i+1).padStart(2,'0')} F</span>`).join('')}</div><div class="shaft-car-label"><strong>${device.id}</strong><small data-shaft-car-state>${device.floor} F</small></div><svg class="cabin-leaders" aria-hidden="true"><polyline data-leader="floorCodes"/><circle data-point="floorCodes" r="3"/><polyline data-leader="cargo"/><circle data-point="cargo" r="3"/>${agv ? '<polyline data-leader="agv"/><circle data-point="agv" r="3"/>' : ''}</svg>
       <button class="cabin-callout marker-callout" data-cabin-info="floorCodes" aria-label="查看轿厢地码"><span>${icon('scan-line')}轿厢地码 <b>${s.floorCodes}</b></span><strong>${cabin.floorCodes[0].id}</strong><small>${cabin.observed ? '固定定位点 · 点击查看' : '离线 · 识读状态未知'}</small></button>
       <button class="cabin-callout cargo-callout" data-cabin-info="cargo" aria-label="查看轿厢货物"><span>${icon('package')}货物信息</span><strong>${!s.observed ? '载荷状态未知' : s.pallets ? `${s.pallets} 托 · ${s.cartons} 箱 · ${s.cargoKg} kg` : agv ? `仅 AGV · ${s.agvKg} kg` : '当前空载'}</strong><small>${!s.observed ? '设备离线，等待更新' : s.pallets ? cabin.cargo.map(c=>c.name).join(' / ') : agv ? 'AGV 空载随梯' : '无货物 · 无随梯 AGV'}</small>${s.observed && s.pallets ? `<small class="payload-code">${cabin.cargo.map(c=>c.id).join(' / ')}</small>` : ''}</button>
       ${agv ? `<button class="cabin-callout agv-callout" data-cabin-info="agv" aria-label="查看随梯 AGV"><span>${icon('bot')}随梯 AGV</span><strong>${agv.id}<em data-agv-riding>${device.paused ? '演示暂停' : device.state==='running' ? '随梯中' : '随梯停靠'}</em></strong><small>电量 ${agv.batteryPct}% · ${agv.floorCodeId.split('-').at(-1)} 定位点</small></button>` : ''}`;
@@ -17,6 +17,12 @@ export function createCabinOverlay({ $, icon, getCurrent, showDialog }) {
   function project(points) {
     const host=$('#cabin-overlay');if(host.hidden || !cabin)return;
     const w=host.clientWidth,h=host.clientHeight, mobile=w<400;
+    for(const point of points.floors||[]){
+      const marker=host.querySelector(`[data-shaft-floor="${point.floor}"]`);
+      if(marker)marker.style.transform=`translate(${point.x-36}px,${point.y-9}px)`;
+    }
+    const carLabel=host.querySelector('.shaft-car-label');
+    if(carLabel&&points.car)carLabel.style.transform=`translate(${points.car.x+8}px,${points.car.y-15}px)`;
     const positions=mobile ? {
       floorCodes:{x:12,y:h-225,w:(w-32)/3},cargo:{x:16+(w-32)/3,y:h-225,w:(w-32)/3},agv:{x:20+2*(w-32)/3,y:h-225,w:(w-32)/3},
     } : {
@@ -41,6 +47,8 @@ export function createCabinOverlay({ $, icon, getCurrent, showDialog }) {
     if(!cabin)return;
     const put=(el,text)=>{if(el&&el.textContent!==text)el.textContent=text;};
     const load=summarizeOnboard(cabin,live),stored=summarizeCabin(cabin);
+    put($('[data-shaft-car-state]'),live.moving?`${live.direction==='up'?'↑':'↓'} ${live.floor} F → ${live.target} F`:`停靠 ${live.floor} F`);
+    document.querySelectorAll('[data-shaft-floor]').forEach(marker=>marker.classList.toggle('active',Number(marker.dataset.shaftFloor)===live.floor));
     put($('[data-agv-riding]'),live.agvStatus);
     const cargo=$('.cargo-callout');
     if(cargo){

@@ -82,3 +82,14 @@
   .cabin-agv-hero { padding:15px; gap:10px; }
   .cabin-agv-hero strong { font-size:18px; }
 }
+
+.twin-main[data-camera-view="shaft"] .scene-building:after { content:' · 井道全景'; }
+
+.shaft-floor-markers,.shaft-car-label { display:none; }
+.twin-main[data-camera-view="shaft"] .shaft-floor-markers,.twin-main[data-camera-view="shaft"] .shaft-car-label { display:block; }
+.shaft-floor-markers>span { position:absolute;left:0;top:0;font:10px/18px var(--mono);color:#6e8270;white-space:nowrap; }
+.shaft-floor-markers>span:after { content:'';position:absolute;left:37px;top:9px;width:14px;border-top:1px solid #aebcab; }
+.shaft-floor-markers>span.active { color:#345c3c;font-weight:600; }
+.shaft-car-label { position:absolute;left:0;top:0;max-width:125px;padding:6px 9px;border:1px solid #b5c8ab;border-radius:5px;background:#f0f6e9f5;box-shadow:0 3px 12px #3359280a; }
+.shaft-car-label strong { display:block;font:500 10px var(--mono);color:#42613b; }
+.shaft-car-label small { display:block;font:9px var(--mono);color:#6a8263;white-space:nowrap;margin-top:4px; }
