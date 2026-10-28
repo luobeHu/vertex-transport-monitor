@@ -15,7 +15,7 @@
 .cabin-callout>strong>em { font:8px 'DM Sans Variable',sans-serif; color:#62844f; font-style:normal; white-space:nowrap; }
 .cabin-callout>small { display:block; font-size:8px; color:#7b8b70; margin-top:5px; line-height:1.5; }
 .cabin-callout>small.payload-code { font:8px/1.5 var(--mono); color:#8d7c5b; margin-top:4px; overflow-wrap:anywhere; }
-.is-cabin-view .scene-building:after { content:' · 轿厢透视'; }
+.is-cabin-view .scene-building:after { content:' · 轿厢剖视'; }
 #focus-cabin[aria-pressed="true"] { background:#e0ecd4; color:#456638; }
 .cargo-callout { border-color:#ddd6c3; }
 .cargo-callout>span,.cargo-callout>strong { color:#7b6643; }

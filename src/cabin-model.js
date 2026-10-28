@@ -8,9 +8,9 @@ export function createCabinPayload(cabin, content, box) {
   const agvPaint=mat({color:0x6d8a91,metalness:.45,roughness:.35});
   const rubber=mat({color:0x28332f,roughness:.8});
   const metal=mat({color:0xa8b8a4,metalness:.65,roughness:.35});
-  const cardboard=mat({color:0xcbb58c,roughness:.8});
+  const cardboard=mat({color:0xaf8d5f,roughness:.8});
   const tape=mat({color:0xa78f64,roughness:.75});
-  const wood=mat({color:0xb59e76,roughness:.8});
+  const wood=mat({color:0x92754e,roughness:.8});
   const lamp=mat({color:0x95bf80,emissive:0x6a9a51,emissiveIntensity:.65});
   const anchors={};
   const mobile=new THREE.Group();cabin.add(mobile);
@@ -50,7 +50,7 @@ export function createCabinPayload(cabin, content, box) {
     mark(box(D.agvWidth,.24,D.agvLength,0,.35,0,agvPaint,g),'agv',agv.id);
     mark(box(.86,.035,1.12,0,.49,0,metal,g),'agv',agv.id);
     mark(box(.60,.025,.02,0,.35,.61,lamp,g),'agv',agv.id);
-    for(const x of [-.44,.44]) for(const z of [-.42,.42]) {
+    for(const x of [-.39,.39]) for(const z of [-.42,.42]) {
       const wheel=new THREE.Mesh(new THREE.CylinderGeometry(.10,.10,.08,16),rubber);wheel.rotation.z=Math.PI/2;wheel.position.set(x,.25,z);g.add(wheel);mark(wheel,'agv',agv.id);
     }
     const lidar=new THREE.Mesh(new THREE.CylinderGeometry(.075,.075,.09,20),rubber);lidar.position.set(.30,.50,.63);g.add(lidar);mark(lidar,'agv',agv.id);
