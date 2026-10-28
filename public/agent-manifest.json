@@ -1,21 +1,51 @@
 {
   "schemaVersion": "1.0",
-  "name": "VERTEX 垂直运输监控",
-  "description": "电梯、提升机、蓝思提升机的设备状态和任务指令静态演示。",
+  "name": "VERTEX 垂直运输监控 · Vue 3",
+  "description": "Vue 3 + Three.js 垂直运输监控组件版，支持自动视角与设备/任务联动。",
   "demo": true,
   "dataUrl": "./data/snapshot.json",
   "viewUrlTemplate": "./?type={type}&device={deviceId}&status={status}&embed=1",
   "commandUrlTemplate": "./?command={commandId}&embed=1",
   "cabinViewUrlTemplate": "./?device={deviceId}&view=cabin&embed=1",
-  "types": ["elevator", "hoist", "lans"],
-  "statuses": ["pending", "completed"],
+  "types": [
+    "elevator",
+    "hoist",
+    "lans"
+  ],
+  "statuses": [
+    "pending",
+    "completed"
+  ],
   "javascriptGlobal": "TransportMonitor",
   "postMessageChannel": "vertex-monitor",
   "actions": {
-    "getSnapshot": {"description": "读取设备和任务快照", "parameters": []},
-    "selectDevice": {"description": "选择设备并联动显示", "parameters": ["deviceId"]},
-    "setStatus": {"description": "切换未完成或已完成任务", "parameters": ["status"]},
-    "openCommand": {"description": "打开指定指令明细", "parameters": ["commandId"]},
-    "openCabinInfo": {"description": "查看当前设备的轿厢地码、货物或随梯 AGV，kind 为 floorCodes/cargo/agv", "parameters": ["kind"]}
+    "getSnapshot": {
+      "description": "读取设备和任务快照",
+      "parameters": []
+    },
+    "selectDevice": {
+      "description": "选择设备并联动显示",
+      "parameters": [
+        "deviceId"
+      ]
+    },
+    "setStatus": {
+      "description": "切换未完成或已完成任务",
+      "parameters": [
+        "status"
+      ]
+    },
+    "openCommand": {
+      "description": "打开指定指令明细",
+      "parameters": [
+        "commandId"
+      ]
+    },
+    "openCabinInfo": {
+      "description": "查看当前设备的轿厢地码、货物或随梯 AGV，kind 为 floorCodes/cargo/agv",
+      "parameters": [
+        "kind"
+      ]
+    }
   }
 }

@@ -431,7 +431,7 @@ const markerImages = computed(() =>
     <template v-else-if="kind === 'agent'"
       ><p class="help-intro">
         支持 URL 定位、组件方法和父页面 postMessage，完整接入示例见
-        vue3/README.md。
+        README.md。
       </p>
       <div class="help-section">
         <h3>Vue 组件</h3>
